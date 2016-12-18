@@ -1,0 +1,92 @@
+html{
+    min-height: 100%;
+    border-left: 200px solid #19314A;
+    border-right:200px solid #19314A;
+}
+
+body {
+    background-image: url("http://i67.tinypic.com/z1shu.png");
+    background-size: 50% 10% contain;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-attachment: scroll;
+    display: flex;
+    flex-direction: row;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    height: 100%;
+    line-height: 1.7;
+    margin: 0px;
+    padding: 30px;
+}
+
+a {
+    color: #4183c4;
+    text-decoration: none;
+    display: block;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+code {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+    font-size: 12px;
+    margin: 0 2px;
+    padding: 0 5px;
+}
+
+#content{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+    margin: 0 0 15px;
+    padding: 0;
+}
+
+h1 {
+    margin-top: 210px;
+    border-bottom: 1px solid #ddd;
+    font-size: 2.5em;
+    font-family: "Verdana", Geneva, sans-serif;
+}
+
+h2 {
+    border-bottom: 1px solid #eee;
+    font-size: 2em;
+    
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
+img {
+    position: absolute;
+    bottom: 0px;
+    left: 850px;
+
+}
+
+p, ul {
+    margin: 15px 0;
+}
+
+ul {
+    padding-left: 30px;
+}
+
