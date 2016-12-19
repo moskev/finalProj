@@ -107,6 +107,7 @@ module.exports = React.createClass({
          }.bind(this));
     },
 
+    //Waiting list functionality that is used if an item is already rented
 	waitMethod: function() {
 		console.log("WaitUser= " +waitUser.value);
 		var waitUserArrayLoaded;

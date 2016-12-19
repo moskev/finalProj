@@ -38,6 +38,7 @@ app.use(function(req, res, next) {
     next();
 });
 
+//Fetches the items from our database
 app.get('/api/comments', function(req, res) {
     db.collection("comments").find({}).toArray(function(err, docs) {
         if (err) throw err;
@@ -45,6 +46,7 @@ app.get('/api/comments', function(req, res) {
     });
 });
 
+//Posts a new item to the database
 app.post('/api/comments', function(req, res) {
     var newComment = {
         id: Date.now(),
@@ -59,6 +61,7 @@ app.post('/api/comments', function(req, res) {
         });
     });
 });
+
 
 app.get('/api/comments/:id', function(req, res) {
     db.collection("comments").find({"id": Number(req.params.id)}).toArray(function(err, docs) {
@@ -82,6 +85,7 @@ app.put('/api/comments/:id', function(req, res) {
         });
 });
 
+//Adds a user to the waiting list for an item
 app.post('/api/comments/:id/waitUsers', function(req, res) {
 	var commentId = Number(req.params.id);
 	var newUser = req.body; // expecting { user: "userName" }
@@ -101,6 +105,7 @@ app.post('/api/comments/:id/waitUsers', function(req, res) {
 	res.json(result);
 });
 
+//Removes a person from the waiting list
 app.delete('/api/comments/:id/waitUsers', function(req, res) {
 var commentId = Number(req.params.id);
 	var newUser = req.body; // expecting { user: "userName" }
@@ -120,6 +125,7 @@ var commentId = Number(req.params.id);
 	res.json(result);
 });
 
+//Deletes an item from the database
 app.delete('/api/comments/:id', function(req, res) {
     db.collection("comments").deleteOne(
         {'id': Number(req.params.id)},
