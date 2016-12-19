@@ -128,6 +128,8 @@ ul {
 
 li {
     float: left;
+    width: 100%;
+
 }
 
 li a {
