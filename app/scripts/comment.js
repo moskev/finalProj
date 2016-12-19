@@ -23,6 +23,7 @@ module.exports = React.createClass({
          }.bind(this));
     },
     render: function() {
+        //Adds administrator privileges/functionality to the page, allowing for addition and deletion of items from the database
         let isAdmin = this.props.isAdmin;
         if (isAdmin){
             return (
