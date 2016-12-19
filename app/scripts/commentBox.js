@@ -52,6 +52,7 @@ module.exports = React.createClass({
     if (isAdmin){
         return (
             <div className="commentBox">
+                <Link to={'/'} type="button">Back</Link>
                 <h1>Admin Page</h1>
                 <CommentList data={this.state.data} isAdmin={this.props.isAdmin}/>
                 <p></p>
