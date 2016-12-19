@@ -22,15 +22,16 @@ module.exports = React.createClass({
         this.setState({author: '', text: ''});
     },
     render: function() {
+        
         return (
             <form className="commentForm" onSubmit={this.handleSubmit}>
-                <input className="ui-widget ui-corner-all" type="text" placeholder="name..."
+                <input className="ui-widget ui-corner-all" type="text" placeholder="Item name..."
                     value={this.state.author} onChange={this.handleAuthorChange}
                 />
-                <input className="ui-widget ui-corner-all" type="text" placeholder="comment..."
+                <input className="ui-widget ui-corner-all" type="text" placeholder="Renter..."
                     value={this.state.text} onChange={this.handleTextChange}
                 />
-                <input className="ui-button ui-widget ui-corner-all" type="submit" value="Post" />
+                <input className="ui-button ui-widget ui-corner-all" type="submit" value="Add" />
             </form>
         );
     }

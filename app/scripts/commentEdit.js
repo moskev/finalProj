@@ -16,6 +16,51 @@ module.exports = React.createClass({
             this.loadData();
         }
     },
+	editWaiting: function(){
+		/*
+		var userid= username;
+		var propID =this.props.params.id;
+		var newUserToEdit= window[userid].value; */
+		var userValue =[];             
+		var newWaitUserToLoad;
+		var newWaitUserLoadedComment;
+		var newWaitUser=[];
+		var newWaitUserRaw;
+		var newWaitUserRawValue;
+		var username = $('#waitUserList > input').map(function(){
+			return this.id
+		});
+		for(var i=0, len = username.length; i<len;i++){
+			console.log("username = "+username[i]);
+			userValue.push(document.getElementById(username[i]).value);
+			if(userValue[i]){
+				console.log("the value= "+userValue[i]);
+				newWaitUserRawValue = userValue[i];
+				newWaitUserRaw = {user: newWaitUserRawValue};
+				console.log(newWaitUserRaw);
+				newWaitUser.push(newWaitUserRaw);
+				console.log(newWaitUser);
+			} else {
+				console.log("to be deleted");
+			}
+		}
+		
+		newWaitUserLoadedComment = {waitUser: newWaitUser};
+		newWaitUserToLoad = JSON.stringify(newWaitUserLoadedComment);
+		console.log("newWaitUserToLoad = "+newWaitUserToLoad);
+		$.ajax({
+			url: API_URL + "/" + this.props.params.id,
+			dataType: 'json',
+			type: 'PUT',
+			contentType:'application/json',
+			data: newWaitUserToLoad
+		}).done(function(comments){
+			this.context.router.push('/'+this.props.params.id);
+			this.refresh();
+		}.bind(this)).fail(function(xhr, status, errorThrown) {
+			console.error(API_URL, status, errorThrown.toString());
+		}.bind(this));
+	},
     loadData: function() {
 		var data;
 		var newUser;
@@ -27,7 +72,8 @@ module.exports = React.createClass({
 			for (var i = 0, len = data.length; i < len; i++) {
 				newUser = data[i].user;
 				if(document.getElementById(newUser) == null){
-					$("h5").append("<span id="+newUser+">"+newUser+"</span><br/>");
+					$("h5").append(
+						"<input type='text' name='"+newUser+"' placeholder='Will be deleted!' id='"+newUser+"' value='"+newUser+"'><br/>");
 				}
 			}
         }.bind(this));
@@ -60,18 +106,7 @@ module.exports = React.createClass({
              console.error(API_URL, status, errorThrown.toString());
          }.bind(this));
     },
-    handleDelete: function() {
-        $.ajax({
-            url: API_URL + "/" + this.props.params.id,
-            type: 'DELETE',
-        })
-         .done(function(comments){
-             this.context.router.push('/');
-         }.bind(this))
-         .fail(function(xhr, status, errorThrown) {
-             console.error(API_URL, status, errorThrown.toString());
-         }.bind(this));
-    },
+
 	waitMethod: function() {
 		console.log("WaitUser= " +waitUser.value);
 		var waitUserArrayLoaded;
@@ -82,7 +117,7 @@ module.exports = React.createClass({
 		var propID = this.props.params.id;
 		var firstUser;
 		//var routerpush= this.context.router.push('/');
-		//this is how you load
+		//this is to load
 		$.ajax(API_URL + "/" + this.props.params.id) .done(function(comments) {
 			if ((typeof comments[0].waitUser === "undefined")||(comments[0].waitUser == [])){
 				console.log("first time case");
@@ -100,6 +135,7 @@ module.exports = React.createClass({
 					data: JSON.stringify(firstUser)
 				}).done(function(comments){
 					this.context.router.push('/'+propID);
+					this.refresh();
 				}.bind(this)).fail(function(xhr, status, errorThrown) {
 					console.error(API_URL, status, errorThrown.toString());
 				}.bind(this));
@@ -129,6 +165,7 @@ module.exports = React.createClass({
 						data: newUserCommentToLoad
 					}).done(function(comments){
 						this.context.router.push('/'+propID);
+						this.refresh();
 					}.bind(this)).fail(function(xhr, status, errorThrown) {
 						console.error(API_URL, status, errorThrown.toString());
 					}.bind(this));
@@ -139,15 +176,20 @@ module.exports = React.createClass({
 	refresh: function() {
 		var data;
 		var newUser;
+		var h5 = document.getElementById("waitUserList");
 		$.ajax(API_URL + "/" + this.props.params.id).done(function(result){
 			console.log("result = "+result);
 			this.setState({waitUser: result[0].waitUser});
-			console.log("result[0].waitUser[0].user = "+result[0].waitUser[0].user);
+			console.log("refreshing Wait User");
 			data = result[0].waitUser;
+			while(h5.firstChild){
+				h5.removeChild(h5.firstChild);
+			}
 			for (var i = 0, len = data.length; i < len; i++) {
 				newUser = data[i].user;
 				if(document.getElementById(newUser) == null){
-					$("h5").append("<span id="+newUser+">"+newUser+"</span><br/>");
+					$("h5").append(
+						"<input type='text' name='"+newUser+"' placeholder='Will be deleted!' id='"+newUser+"' value='"+newUser+"'><br/>");
 				}
 			}
          }.bind(this))
@@ -192,7 +234,7 @@ module.exports = React.createClass({
 				contentType:'application/json',
 				data: dataToLoad
 			}).done(function(comments){
-				$('span[id^='+newUser+']').remove();
+				$('input[id^='+newUser+']').remove();
 				this.context.router.push('/'+propID);
 			}.bind(this)).fail(function(xhr, status, errorThrown) {
 				console.error(API_URL, status, errorThrown.toString());
@@ -200,29 +242,32 @@ module.exports = React.createClass({
         }.bind(this))
 		 .fail(function(xhr, status, errorThrown) {
             console.error(API_URL, status, errorThrown.toString());
+			this.refresh();
         }.bind(this));
 	},
     render: function() {
         return (
-            <div>
+			<div>
                 <form className="commentForm">
                     <h1>Item Request Form - {this.state.author}</h1>
                     <h3>Current Renter - {this.state.text}</h3>
                     <h4>Waiting List: </h4>
-					<h5/>
+					<h5 id="waitUserList"/>
+					<button type="button" onClick={this.editWaiting}>Edit Submission</button>
 					<button type="button" onClick={this.refresh}>Refresh User Lists</button>
 					<br/>
 					<input
                         type="text"
-						placeholder="Input your name here"
+						placeholder="Input Waiting Person Name Here"
                         name="waitUser"
 						id="waitUser"
                     />
-                    <button type="button" onClick={this.waitMethod}>Add to Wait</button>
+                    <button type="button" onClick={this.waitMethod}>Update</button>
                     <button type="button" onClick={this.waitReturnMethod}>Return</button>
                 </form>
                 <Link to='/'>Cancel</Link>
             </div>
+			
         );
     }
 });

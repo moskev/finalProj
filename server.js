@@ -82,6 +82,44 @@ app.put('/api/comments/:id', function(req, res) {
         });
 });
 
+app.post('/api/comments/:id/waitUsers', function(req, res) {
+	var commentId = Number(req.params.id);
+	var newUser = req.body; // expecting { user: "userName" }
+	var result;
+
+	db.collection('comments').updateOne({ id: commentId },
+	{$addToSet: newUser},
+	function(err, result) {
+		if (err) throw err;
+
+		db.collection('comments').findOne({id: commentId}, {fields: {'waitUsers': 1}}, function(err, updatedUserList) {
+			if (err) throw err;
+			result = updatedUserList;
+		});
+	});
+
+	res.json(result);
+});
+
+app.delete('/api/comments/:id/waitUsers', function(req, res) {
+var commentId = Number(req.params.id);
+	var newUser = req.body; // expecting { user: "userName" }
+	var result;
+
+	db.collection('comments').deleteOne({ id: commentId },
+	{$addToSet: newUser},
+	function(err, result) {
+		if (err) throw err;
+
+		db.collection('comments').findOne({id: commentId}, {fields: {'waitUsers': 1}}, function(err, updatedUserList) {
+			if (err) throw err;
+			result = updatedUserList;
+		});
+	});
+
+	res.json(result);
+});
+
 app.delete('/api/comments/:id', function(req, res) {
     db.collection("comments").deleteOne(
         {'id': Number(req.params.id)},

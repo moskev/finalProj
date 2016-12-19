@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-
+import {Link} from 'react-router'
 import CommentList from './commentList';
 import CommentForm from './commentForm';
 import { API_URL, POLL_INTERVAL } from './global';
@@ -23,6 +23,7 @@ module.exports = React.createClass({
              console.error(this.props.url, status, errorThrown.toString());
          }.bind(this));
     },
+
     handleCommentSubmit: function(comment) {
         var comments = this.state.data;
         comment.id = Date.now();
@@ -47,12 +48,34 @@ module.exports = React.createClass({
         setInterval(this.loadCommentsFromServer, POLL_INTERVAL);
     },
     render: function() {
+    let isAdmin = this.props.isAdmin;
+    if (isAdmin){
         return (
             <div className="commentBox">
-                <h1>Equipment Rental</h1>
-                <CommentList data={this.state.data} />
-                <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+                <h1>Admin Page</h1>
+                <CommentList data={this.state.data} isAdmin={this.props.isAdmin}/>
+                <p></p>
+                <h2>Add New Item </h2>
+                <CommentForm onCommentSubmit={this.handleCommentSubmit} isAdmin={this.props.isAdmin}/>
             </div>
         );
+    }
+    else{
+        return (
+            <div className="commentBox">
+
+                <Link to={'/admin'} type="button">Administrator Features</Link>
+                <h1>Equipment Rental</h1>
+                <CommentList data={this.state.data} isAdmin={this.props.isAdmin}/>
+            </div>
+
+        );
+    }
+    },
+
+    getDefaultProps() {
+        return {
+            isAdmin: false
+        }
     }
 });
